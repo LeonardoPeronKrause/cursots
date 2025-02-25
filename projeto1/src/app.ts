@@ -1,102 +1,39 @@
-class Departamento {
-  static fiscalYear = 2020;
-  //private readonly id: string;
-  //public name: string;
-  protected employees: string[] = [];
+//type AddFunction = (a: number, b: number) => number;
+interface AddFunction {
+    (a: number, b: number): number;
+};
 
-  constructor(private readonly id: string, public name: string) {
-    //this.id = id;
-    //this.name = n;
-  }
+let add: AddFunction;
 
-  static createEmployee(name: string) {
-    return {name: name}
-  }
+add = (n1:number, n2:number) => {
+    return n1 + n2;
+};
 
-  describe(this: Departamento) {
-    console.log(`Departamento (${this.id}): ${this.name}`);
-  }
-
-  addEmployees(employee: string) {
-    this.employees.push(employee);
-  }
-
-  employeesInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
-  }
+interface Named {
+    readonly name: string;
+    outputName?: string;
 }
 
-class TIDepartamento extends Departamento {
-  admins: string[];
-  constructor(id: string, admins: string[]) {
-    super(id, 'ti');
-    this.admins = admins;
-  }
+interface Greetable extends Named {
+    greet(phrase: string): void; 
 }
 
-class contabilidadeDepatamento extends Departamento {
-  private lastReport: string;
+class Person implements Greetable {
+    name: string;
+    age = 22;
 
-  get mostRecentReport() {
-    if (this.lastReport) {
-      return this.lastReport;
+    constructor(n: string) {
+        this.name = n;
     }
-    throw new Error('Not report found');
-  }
 
-  set mostRecentReport(value: string) {
-    if (!value) {
-      throw new Error('Por favor, passe um valor válido!');
+    greet(phrase: string) {
+        console.log(phrase + ' ' + this.name);
     }
-    this.addReport(value)
-  } 
-
-  constructor(id: string, private reports: string[]) {
-    super(id, 'contabilidade')
-    this.lastReport = reports[0];
-  }
-
-  addEmployees(name: string): void {
-    if (name === 'Leonardo') {
-      return;
-    }
-    this.employees.push(name);
-  }
-
-  addReport(text: string) {
-    this.reports.push(text);
-    this.lastReport = text;
-  }
-
-  printReport() {
-    console.log(this.reports);
-  }
 }
 
-const employee1 = Departamento.createEmployee('Leonardo');
-console.log(employee1, Departamento.fiscalYear);
+let user1: Greetable;
 
-const ti = new TIDepartamento('d1', ['Leonardo']);
+user1 = new Person('Leonardo');
 
-ti.addEmployees('Leonardo');
-ti.addEmployees('Elisa');
-
-//ti.employees[2] = 'Caio';
-
-ti.describe();
-ti.employeesInformation();
-
-console.log(ti);
-
-const contabilidade = new contabilidadeDepatamento('d2', []);
-
-contabilidade.mostRecentReport = 'Leonardo Peron Krause vai ser RICO!'; 
-contabilidade.addReport('Algo está errado!');
-console.log(contabilidade.mostRecentReport);
-
-contabilidade.addEmployees('Leonardo');
-contabilidade.addEmployees('Elisa');
-
-contabilidade.printReport();
-contabilidade.employeesInformation();
+user1.greet('Hi there - I am ');
+console.log(user1)
