@@ -1,101 +1,98 @@
-class Department {
-  // private readonly id: string;
-  // private name: string;
-  protected employees: string[] = [];
+/*const names: Array<string> = [];
+names[0].split(' ');
 
-  constructor(private readonly id: string, public name: string) {
-    // this.id = id;
-    // this.name = n;
+const promise: Promise<number> = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(10);
+  }, 2000);
+});
+
+promise.then(data => {
+  data.split(' ');
+})*/
+
+
+function merge<T extends object, U extends object>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
+}
+
+const mergedObj = merge({name: 'Leo', hobbies: ['Sports']}, {age: 22});
+console.log(mergedObj);
+
+interface Lengthy {
+  length: number;
+}
+
+function countAndPrint<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = 'Got no value';
+  if (element.length === 1) {
+    descriptionText = 'Got 1 elements.'
+  } else if (element.length > 1) {
+    descriptionText = 'Got ' + element.length + ' elements.'
+  }
+  return [element, descriptionText];
+}
+
+console.log(countAndPrint(['Sports', 'Cooking']));
+
+function extractAndConvert<T extends object, U extends keyof T>(
+  obj: T,
+  key: U
+) {
+  return 'Value: ' + obj[key];
+}
+
+extractAndConvert({name: 'Max'}, 'name');
+
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
+
+  addItem(item: T) {
+    this.data.push(item);
   }
 
-  describe(this: Department) {
-    console.log(`Department (${this.id}): ${this.name}`);
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+    return;
+    }
+    this.data.splice(this.data.indexOf(item), 1); // -1
   }
 
-  addEmployee(employee: string) {
-    // validation etc
-    // this.id = 'd2';
-    this.employees.push(employee);
-  }
-
-  printEmployeeInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
+  getItems() {
+    return [...this.data];
   }
 }
 
-class ITDepartment extends Department {
-  admins: string[];
-  constructor(id: string, admins: string[]) {
-    super(id, 'IT');
-    this.admins = admins;
-  }
+const textStorage = new DataStorage<string>();
+textStorage.addItem('Leo');
+textStorage.addItem('Elisa');
+textStorage.removeItem('Leo');
+console.log(textStorage.getItems());
+
+const numberStorage = new DataStorage<number>();
+
+/*const objStorage = new DataStorage<object>();
+const maxObj = {name: 'Leo'};
+objStorage.addItem(maxObj);
+objStorage.addItem({name: 'Elisa'});
+// ...
+objStorage.removeItem(maxObj);
+console.log(objStorage.getItems());*/
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
 }
 
-class AccountingDepartment extends Department {
-  private lastReport: string;
-
-  get mostRecentReport() {
-    if (this.lastReport) {
-      return this.lastReport;
-    }
-    throw new Error('No report found.');
-  }
-
-  set mostRecentReport(value: string) {
-    if (!value) {
-      throw new Error('Please pass in a valid value!');
-    }
-    this.addReport(value);
-  }
-
-  constructor(id: string, private reports: string[]) {
-    super(id, 'Accounting');
-    this.lastReport = reports[0];
-  }
-
-  addEmployee(name: string) {
-    if (name === 'Max') {
-      return;
-    }
-    this.employees.push(name);
-  }
-
-  addReport(text: string) {
-    this.reports.push(text);
-    this.lastReport = text;
-  }
-
-  printReports() {
-    console.log(this.reports);
-  }
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+    let courseGoal: Partial<CourseGoal> = {};
+    courseGoal.title = title;
+    courseGoal.description = description;
+    courseGoal.completeUntil = date;
+    return courseGoal as CourseGoal;
 }
-
-const it = new ITDepartment('d1', ['Max']);
-
-it.addEmployee('Max');
-it.addEmployee('Manu');
-
-// it.employees[2] = 'Anna';
-
-it.describe();
-it.name = 'NEW NAME';
-it.printEmployeeInformation();
-
-console.log(it);
-
-const accounting = new AccountingDepartment('d2', []);
-
-accounting.mostRecentReport = 'Year End Report';
-accounting.addReport('Something went wrong...');
-console.log(accounting.mostRecentReport);
-
-accounting.addEmployee('Max');
-accounting.addEmployee('Manu');
-
-accounting.printReports();
-accounting.printEmployeeInformation();
-
-// const accountingCopy = { name: 'DUMMY', describe: accounting.describe };
-
-// accountingCopy.describe();
