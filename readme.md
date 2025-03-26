@@ -1,3 +1,5 @@
+# Professor Maximilian Schwarzmüller
+
 # Guia Rápido de TypeScript
 
 ## O que é TypeScript?
